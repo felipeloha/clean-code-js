@@ -10,7 +10,6 @@ formatShipToLabel = (shipToAddress) => SHIP_TO_DETAILS.map(item =>
     shipToAddress.address[`${item}`],
 ).filter(item =>
      item,
-).join(', ');
 ).join(', ') || shipToAddress.name;
 ```
 

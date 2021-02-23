@@ -119,12 +119,11 @@ salesOrderState.get('thirdPartyAddresses').map(tpa =>
 ```
 
 
-### multiple unnecessary conditions
+### flow control
 
 **Bad:**
 
 ```javascript
-
 if (shipTo) {
     const _selectItem = addresses.find(item => shipTo === item.address);
 
@@ -147,5 +146,28 @@ if (shipTo && !addresses.some(item => shipTo === item.address))
       address: shipTo,
     }));
 ```
-                 
+       
+**Bad:**
+```javascript
+const val = state.get('val');
+if (val) {
+  const nextVal = state.getIn(['nextObjext', 'nextval']);
+  if (nextVal) {
+    const result = doSomething(nextVal);
+    return result.attr;
+  }
+}
+return null;
+```
+
+**Good:**
+
+```javascript
+const val = state.get('val');
+const nextVal = state.getIn(['nextObjext', 'nextval']);
+if(!val || !nextVal) return null
+
+return doSomething(nextVal).attr;
+```    
+  
 

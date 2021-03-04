@@ -216,11 +216,11 @@ await apiClient.postSomething(params)
     
     // this should be a function but for the sake of the pattern
     if (response.code === 422 && response.message.contains('no_stock'))
-      error.general_error = i18nIntl().formatMessage({ id: 'error.no_stock' });
+      error. = i18nIntl().formatMessage({ id: 'error.no_stock' });
     else if (response.code === 422)
-      error.general_error = i18nIntl().formatMessage({ id: 'error.422' });
+      error.error_message = i18nIntl().formatMessage({ id: 'error.422' });
     else
-      error.general_error = i18nIntl().formatMessage({ id: 'error.creatingMultiplePicking' });
+      error.error_message = i18nIntl().formatMessage({ id: 'error.creatingMultiplePicking' });
 
     dispatch(showErrors(error));
   })
@@ -228,9 +228,9 @@ await apiClient.postSomething(params)
     //throw structured errors
     const _error = new Error();
     if (error.code === HTTP_STATUS_CODES.GATEWAY_TIMEOUT)
-      _error.general_error = i18nIntl().formatMessage({ id: 'request.timeout.error' });
+      _error.error_message = i18nIntl().formatMessage({ id: 'request.timeout.error' });
     else
-      _error.general_error = i18nIntl().formatMessage({ id: 'request.general.error' });
+      _error.error_message = i18nIntl().formatMessage({ id: 'request.general.error' });
     throw error;
   });
 ```

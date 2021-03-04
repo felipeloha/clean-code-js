@@ -168,6 +168,67 @@ const nextVal = state.getIn(['nextObjext', 'nextval']);
 if(!val || !nextVal) return null
 
 return doSomething(nextVal).attr;
-```    
-  
+```   
 
+### error handling
+
+**Bad:**
+```javascript
+await apiClient.postSomething(params)
+    .then(response => {
+      if (response.status === HTTP_STATUS_CODES.GATEWAY_TIMEOUT)
+        throw response;
+      else
+        return response.json();
+    })
+    .then(response => {
+      if (response.code === 422) {
+        response.general_error = i18nIntl().formatMessage({ id: 'error.no_stock' });
+      } else
+        response.general_error = i18nIntl().formatMessage({ id: 'error.creatingMultiplePicking' });
+        
+      dispatch(showErrors(response));
+    })
+    .catch(errorResponse => {
+      response.general_error = i18nIntl().formatMessage({ id: 'request.timeout.error' });
+      throw new Error('Error', errorResponse);
+    });
+```
+  
+**Better:**
+```javascript
+await apiClient.postSomething(params)
+  .then(response => {
+    if (response.status === HTTP_STATUS_CODES.GATEWAY_TIMEOUT) {
+      //throw structured errors
+      const error = new Error('timeout error');
+      error.status = response.status;
+      error.response = response;
+      throw error;
+    } else
+      return response.json();
+  })
+  .then(response => {
+    // define strucutured erores
+    const error = {};
+    
+    // this should be a function but for the sake of the pattern
+    if (response.code === 422 && response.message.contains('no_stock'))
+      error.general_error = i18nIntl().formatMessage({ id: 'error.no_stock' });
+    else if (response.code === 422)
+      error.general_error = i18nIntl().formatMessage({ id: 'error.422' });
+    else
+      error.general_error = i18nIntl().formatMessage({ id: 'error.creatingMultiplePicking' });
+
+    dispatch(showErrors(error));
+  })
+  .catch(error => {
+    //throw structured errors
+    const _error = new Error();
+    if (error.code === HTTP_STATUS_CODES.GATEWAY_TIMEOUT)
+      _error.general_error = i18nIntl().formatMessage({ id: 'request.timeout.error' });
+    else
+      _error.general_error = i18nIntl().formatMessage({ id: 'request.general.error' });
+    throw error;
+  });
+```

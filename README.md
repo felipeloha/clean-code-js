@@ -182,6 +182,7 @@ await apiClient.postSomething(params)
         return response.json();
     })
     .then(response => {
+       // handles all possible 422 as a single one :(
       if (response.code === 422) {
         response.general_error = i18nIntl().formatMessage({ id: 'error.no_stock' });
       } else
@@ -190,6 +191,7 @@ await apiClient.postSomething(params)
       dispatch(showErrors(response));
     })
     .catch(errorResponse => {
+        // handles all possible errors as a timeout :(
       response.general_error = i18nIntl().formatMessage({ id: 'request.timeout.error' });
       throw new Error('Error', errorResponse);
     });

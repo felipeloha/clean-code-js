@@ -234,3 +234,64 @@ await apiClient.postSomething(params)
     throw error;
   });
 ```
+
+### React test library - wait for elements
+The following test will be unstable because it does not wait until the action is done
+**Bad:**
+```
+describe('Period filter ', () => {
+  test('should assert period filter range after clear all filters ', async () => {
+
+    const salesOrdersMockData = { sales_orders: [], total_results: 0 };
+    await renderApp(salesOrdersMockData);
+
+    const mocks = await getNocksWhenFetchingSalesOrder(salesOrdersMockData);
+    
+    const periodFilter = screen.getByTestId('e2e-period-filter');
+    userEvent.click(periodFilter);
+    
+    const periodFilterContent = screen.getByTestId('e2e-date-range-content');
+    const next30Days = within(periodFilterContent).getByText('Next 30 days');
+    expect(next30Days).toBeVisible();
+    userEvent.click(next30Days.parentElement);
+    
+    await waitForMocksDone(mocks);
+    
+    const periodFilter = screen.getByTestId('e2e-period-filter');
+    expect(periodFilter).toHaveTextContent('Next 30 days');
+
+  }, 25000);
+
+});
+```
+
+**Better:**
+This test waits until the orders are rendered making sure the action was executed properly
+```
+describe('Period filter ', () => {
+  test('should assert period filter range after clear all filters ', async () => {
+
+    const salesOrdersMockData = { sales_orders: [], total_results: 0 };
+    await renderApp(salesOrdersMockData);
+
+    const mocks = await getNocksWhenFetchingSalesOrder(salesOrdersMockData);
+    
+    const periodFilter = screen.getByTestId('e2e-period-filter');
+    userEvent.click(periodFilter);
+    
+    const periodFilterContent = screen.getByTestId('e2e-date-range-content');
+    const next30Days = within(periodFilterContent).getByText('Next 30 days');
+    expect(next30Days).toBeVisible();
+    userEvent.click(next30Days.parentElement);
+    
+    await waitForMocksDone(mocks);
+    const orders = screen.getByTestId('e2e-orders');
+    await waitFor(() => expect(orders).toBeVisible(), { timeout: global.DEFAULT_TIMEOUT_2 });
+    
+    const periodFilter = screen.getByTestId('e2e-period-filter');
+    expect(periodFilter).toHaveTextContent('Next 30 days');
+
+  }, 25000);
+
+});
+```

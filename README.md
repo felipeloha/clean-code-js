@@ -295,3 +295,118 @@ describe('Period filter ', () => {
 
 });
 ```
+
+### use of constants and avoiding making operations multiple times
+**Bad:**
+```
+
+export function fetchMe() {
+  return (dispatch) => apiClient.getMe()
+    .then(response => response.json())
+    .then(me => {
+      if (!isEmpty(me.warehouses))
+        apiClient.getWarehouses({ 'id[]': me.warehouses, sort_by: 'name', limit: 50 })
+          .then(response => response.json())
+          .then(warehouses => {
+            dispatch(receiveMe(me, warehouses.warehouses));
+          });
+      else
+        dispatch(receiveMe(me, []));
+    });
+}
+
+...
+
+export const fetchContext = (callback, authResponse = undefined) => async (dispatch) => {
+  await authApi.getMe()
+    .then(response => {
+      const me = response.data;
+      axios.all(
+        [
+          me.type === 'admin' ?
+            api.getSettings({
+              limit: 2147483647,
+            }) :
+            noop(),
+          !isEmpty(me.warehouses) ?
+            api.getWarehouses({
+              'id[]': me.warehouses,
+              sort_by: 'name',
+              limit: 50,
+            }) :
+            noop(),
+          me.type !== 'root' ?
+            api.getClients({ limit: 2147483647 }) :
+            noop(),
+        ])
+        .then(...)
+    })
+  };
+}
+
+....
+
+render() {
+  const { value, warehouses } = this.props;
+  const menuItems = warehouses.slice(0, 50).map(w => <MenuItem key={w.get('id').toString()} value={w.get('id').toString()} disableRipple >{w.get('name')}</MenuItem>);
+  ...
+  return (...)
+}
+```
+
+**Better:**
+```
+
+export function fetchMe() {
+  return (dispatch) => apiClient.getMe()
+    .then(response => response.json())
+    .then(me => {
+      if (!isEmpty(me.warehouses))
+        apiClient.getWarehouses({ 'id[]': me.warehouses, sort_by: 'name', limit: MAX_WAREHOUSES_LIMIT })
+          .then(response => response.json())
+          .then(warehouses => {
+            dispatch(receiveMe(me, warehouses.warehouses));
+          });
+      else
+        dispatch(receiveMe(me, []));
+    });
+}
+
+...
+
+export const fetchContext = (callback, authResponse = undefined) => async (dispatch) => {
+  await authApi.getMe()
+    .then(response => {
+      const me = response.data;
+      axios.all(
+        [
+          me.type === 'admin' ?
+            api.getSettings({
+              limit: MAX_SAFE_LIMIT,
+            }) :
+            noop(),
+          !isEmpty(me.warehouses) ?
+            api.getWarehouses({
+              'id[]': me.warehouses,
+              sort_by: 'name',
+              limit: MAX_WAREHOUSES_LIMIT,
+            }) :
+            noop(),
+          me.type !== 'root' ?
+            api.getClients({ limit: MAX_SAFE_LIMIT }) :
+            noop(),
+        ])
+        .then(...)
+    })
+  };
+}
+
+....
+
+render() {
+  const { value, warehouses } = this.props;
+  const menuItems = warehouses.map(w => <MenuItem key={w.get('id').toString()} value={w.get('id').toString()} disableRipple >{w.get('name')}</MenuItem>);
+  ...
+  return (...)
+}
+```

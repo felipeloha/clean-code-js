@@ -299,7 +299,6 @@ describe('Period filter ', () => {
 ### use of constants and avoiding making operations multiple times
 **Bad:**
 ```
-
 export function fetchMe() {
   return (dispatch) => apiClient.getMe()
     .then(response => response.json())
@@ -459,11 +458,13 @@ bad: heigthWidth, result
 
 ### Naming Function Parameters
 Modifying a function parameter is an anti-pattern. If the object needs to be modifies is it best to name the function parameters in a specific way:
+```
 function doSomething(person_){
   const person = {...person_};
   person.name = "pepito " + person.name
   return person;
 }
+```
  
 
 ### Actions and Handlers

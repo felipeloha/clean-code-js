@@ -421,7 +421,7 @@ General approach: One method should do one thing. Therefore it should be possibl
 - Avoid general or non standardized names: process, turn, names without a verb in it, names proposing two actions in one method
 
 ### Naming Integers
-Good: age, year, failureCount, numberOfFailures, tooltipShowDelayInMillis
+Good: age, year, failureCount, numberOfFailures, tooltipShowDelayInMillis  
 Bad: failures, tooltipShowDelay
 
 For functions counting something: countFailures
@@ -431,15 +431,15 @@ price, height, moneyAmount
 If more precision is needed: widthInCentimeters, angleInDegrees.
 
 ### Naming Booleans and validation Functions
-Good: isDisabled, hasErrors, allowsWhitespace, didUpdate, shouldUpdate, willUpdate, areBoxesClosed
+Good: isDisabled, hasErrors, allowsWhitespace, didUpdate, shouldUpdate, willUpdate, areBoxesClosed  
 Bad: disabled, errors, boxesClosed
 
 ### Naming Strings
-In context of parsing values it is necessary to be more precise in the naming
+In context of parsing values it is necessary to be more precise in the naming  
 const year = parseInt(yearAsString, 10); 
 
 ### Naming Arrays, Lists, and Sets
-Good: customers, errors, queueOfErrors, orderedCustomers
+Good: customers, errors, queueOfErrors, orderedCustomers  
 Bad: customerList, handledOperationSet
 
 if we respect the plurality agreement is not necessary to write the variable type
@@ -447,13 +447,13 @@ if we respect the plurality agreement is not necessary to write the variable typ
 ### Naming Maps
 In general we should name them: keyToValueMap or for functions mapKeyToValue
 
-Good: productIdToSuppliersMap or mapProductIdToSupplier
+Good: productIdToSuppliersMap or mapProductIdToSupplier  
 Bad: mapProducts, productsMap
 
 ### Naming Pairs and Tuples
 In general variable1AndVariable2
 
-good: heightAndWidth, heightWidthAndLength
+good: heightAndWidth, heightWidthAndLength  
 bad: heigthWidth, result
 
 ### Naming Function Parameters
@@ -470,13 +470,13 @@ function doSomething(person_){
 ### Actions and Handlers
 Actions can be understood as something the user does and handlers as something the software does after the action
 
-Good: closePacking, handlePackingClosed
+Good: closePacking, handlePackingClosed  
 Bad: close, handlePacking
  
 
 ### Naming in testing
 For Assertions the form assertSomethingPastAction is a good idea.
 
-Good: renderOrderView, assertProductSelected, assertAcceptPackingOrderErrorDisplayed
+Good: renderOrderView, assertProductSelected, assertAcceptPackingOrderErrorDisplayed  
 Bad: renderForm, check, checkProduct, assertAcceptPackingError
 

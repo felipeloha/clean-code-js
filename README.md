@@ -410,3 +410,72 @@ render() {
   return (...)
 }
 ```
+
+
+## Naming
+General approach: One method should do one thing. Therefore it should be possible to name them in a precise way.
+
+- Use CRUD and list operation names if possible: create, update, delete, get, map, filter, execute.
+    - antipattern: execute + action
+        - bad: executeAcceptPacking
+        - good: acceptPacking
+- Avoid general or non standardized names: process, turn, names without a verb in it, names proposing two actions in one method
+
+### Naming Integers
+Good: age, year, failureCount, numberOfFailures, tooltipShowDelayInMillis
+Bad: failures, tooltipShowDelay
+
+For functions counting something: countFailures
+
+### Naming Floating Point Numbers
+price, height, moneyAmount
+If more precision is needed: widthInCentimeters, angleInDegrees.
+
+### Naming Booleans and validation Functions
+Good: isDisabled, hasErrors, allowsWhitespace, didUpdate, shouldUpdate, willUpdate, areBoxesClosed
+Bad: disabled, errors, boxesClosed
+
+### Naming Strings
+In context of parsing values it is necessary to be more precise in the naming
+const year = parseInt(yearAsString, 10); 
+
+### Naming Arrays, Lists, and Sets
+Good: customers, errors, queueOfErrors, orderedCustomers
+Bad: customerList, handledOperationSet
+
+if we respect the plurality agreement is not necessary to write the variable type
+
+### Naming Maps
+In general we should name them: keyToValueMap or for functions mapKeyToValue
+
+Good: productIdToSuppliersMap or mapProductIdToSupplier
+Bad: mapProducts, productsMap
+
+### Naming Pairs and Tuples
+In general variable1AndVariable2
+
+good: heightAndWidth, heightWidthAndLength
+bad: heigthWidth, result
+
+### Naming Function Parameters
+Modifying a function parameter is an anti-pattern. If the object needs to be modifies is it best to name the function parameters in a specific way:
+function doSomething(person_){
+  const person = {...person_};
+  person.name = "pepito " + person.name
+  return person;
+}
+ 
+
+### Actions and Handlers
+Actions can be understood as something the user does and handlers as something the software does after the action
+
+Good: closePacking, handlePackingClosed
+Bad: close, handlePacking
+ 
+
+### Naming in testing
+For Assertions the form assertSomethingPastAction is a good idea.
+
+Good: renderOrderView, assertProductSelected, assertAcceptPackingOrderErrorDisplayed
+Bad: renderForm, check, checkProduct, assertAcceptPackingError
+

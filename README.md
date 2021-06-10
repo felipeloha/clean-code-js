@@ -216,7 +216,7 @@ await apiClient.postSomething(params)
     
     // this should be a function but for the sake of the pattern
     if (response.code === 422 && response.message.contains('no_stock'))
-      error. = i18nIntl().formatMessage({ id: 'error.no_stock' });
+      error.error_message = i18nIntl().formatMessage({ id: 'error.no_stock' });
     else if (response.code === 422)
       error.error_message = i18nIntl().formatMessage({ id: 'error.422' });
     else
